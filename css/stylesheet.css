@@ -1,0 +1,34 @@
+
+
+html,
+body {
+	height: 100%;
+	padding: 0;
+	margin: 0;
+}
+
+#map{
+	height: 100%;
+	position: relative;
+}
+
+#location-list {
+	list-style: none;
+	margin: 0;
+	z-index: 1;
+	top: 10px;
+	position: absolute;
+	right: 10px;
+	border: 2px solid black;
+	border-radius: 4px;
+	font: 18px sans-serif;
+	color: #7e7e7e;
+	padding:0;
+	max-width: 30%;
+}
+
+.list-item {
+	background-color: white;
+	padding:4px;
+	margin:2px;
+}

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="css/stylesheet.css">
+	<title>Project Neighborhood Map</title>
+</head>
+<body>
+	<div id="map"></div>
+	<ul id="location-list" data-bind="foreach: mapList, click: displayAlert">
+		<li class="list-item" data-bind="text: title"><h2></h2></li>
+	</ul>
+	<script type="text/javascript" src="js/knockout.js"></script>
+	<script async defer 
+	    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC7EkntE_zehiMWEKBvl81CqqHMErQ0WpM&v=3&callback=initMap">
+	</script>
+	<script type="text/javascript" src="js/app.js"></script>
+</body>
+</html>
