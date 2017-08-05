@@ -50,6 +50,8 @@ var ViewModel = function(){
 		createMarker();
 	};
 
+	var infowindow = new google.maps.InfoWindow();
+
 	var createMarker = function() {
 		var marker='';
 		model.forEach(function(data){
@@ -58,14 +60,16 @@ var ViewModel = function(){
 				position: data.location,
 				title: data.title,
 				animation: google.maps.Animation.DROP,
-			})
+			});
 
-			marker.addListener('click',function() {
-				var infowindow = new google.maps.InfoWindow();
-	          	populateInfoWindow(this,infowindow);
-	          //marker.icon = 'https://mts.googleapis.com/vt/icon/name=icons/spotlight/spotlight-waypoint-blue.png&psize=16&font=fonts/Roboto-Regular.ttf&color=ff333333&ax=44&ay=48&scale=1';
-	        });
+			clickListener(marker);
 		});	
+	};
+
+	var clickListener = function(marker){
+		google.maps.event.addListener(marker,'click',function(){
+          	populateInfoWindow(this,infowindow);
+		});
 	};	
 
 	var populateInfoWindow = function(marker,infowindow) {
@@ -74,6 +78,7 @@ var ViewModel = function(){
 		'</div>';
 
 		if(infowindow.marker != marker){
+			infowindow.marker = marker;
 			infowindow.setContent(contentString);
 			infowindow.open(map,marker);
 			infowindow.addListener('closeClick',function(){
