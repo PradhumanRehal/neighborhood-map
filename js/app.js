@@ -66,9 +66,11 @@ var ViewModel = function(){
 		for(var i=0; i<self.markers().length; i++){
 			if(self.markers()[i] == marker){
 				self.markers()[i].setAnimation(google.maps.Animation.BOUNCE);
+				self.markers()[i].setIcon('https://mts.googleapis.com/vt/icon/name=icons/spotlight/spotlight-waypoint-blue.png&psize=16&font=fonts/Roboto-Regular.ttf&color=ff333333&ax=44&ay=48&scale=1');
 			}
 			else{
 				self.markers()[i].setAnimation(false);
+				self.markers()[i].setIcon('http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png');
 			}
 		}
 	};
