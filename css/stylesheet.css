@@ -19,16 +19,18 @@ body {
 	top: 10px;
 	position: absolute;
 	right: 10px;
-	border: 2px solid black;
+	border: 2px solid #6497b1;
 	border-radius: 4px;
 	font: 18px sans-serif;
-	color: #7e7e7e;
+	color: 	#011f4b;
 	padding:0;
 	max-width: 30%;
 }
 
 .list-item {
-	background-color: white;
+	background-color: #b3cde0;
 	padding:4px;
 	margin:2px;
+	border-radius: 4px;
+	height: 30px;
 }
