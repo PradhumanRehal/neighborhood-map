@@ -8,8 +8,8 @@
 </head>
 <body>
 	<div id="map"></div>
-	<ul id="location-list" data-bind="foreach: mapList, click: displayAlert">
-		<li class="list-item" data-bind="text: title"><h2></h2></li>
+	<ul id="location-list" data-bind="foreach: markers">
+		<li class="list-item" data-bind="text: title, click: $parent.populateInfoWindow"></li>
 	</ul>
 	<script type="text/javascript" src="js/knockout.js"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC7EkntE_zehiMWEKBvl81CqqHMErQ0WpM"></script>
