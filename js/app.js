@@ -7,14 +7,6 @@ var locations = [
 	{title: 'National Rail Museum, New Delhi', location: {lat: 28.585499,lng: 77.180089}, marker: '', selected:false, infoWindow: '', wikiData:''}
 ];
 
-var MapList = function(data){
-	this.title = ko.observable(data.title);
-	this.location = ko.observable(data.location);
-	this.marker = ko.observable(data.marker);
-	this.wikiData = ko.observable(data.wikiData);
-	this.infoWindow = ko.observable(data.infoWindow);	
-};
-
 var initMap = function(){
 		return new google.maps.Map(document.getElementById('map'),{
 		center: {lat: 28.613939,lng: 77.209021},
@@ -22,9 +14,8 @@ var initMap = function(){
 	});
 };
 
-var activeMarker;
-
 var ViewModel = function(){
+	var activeMarker;
 	var self = this;
 	self.query = ko.observable('');
 
@@ -78,7 +69,7 @@ var ViewModel = function(){
 	self.resetMarker=function(marker){
 		if(activeMarker){
 		activeMarker.setAnimation(false);
-		activeMarker.setIcon('http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png');	
+		activeMarker.setIcon('https://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png');	
 		}
 		marker.setAnimation(google.maps.Animation.BOUNCE);
 		marker.setIcon('https://mts.googleapis.com/vt/icon/name=icons/spotlight/spotlight-waypoint-blue.png&psize=16&font=fonts/Roboto-Regular.ttf&color=ff333333&ax=44&ay=48&scale=1');
@@ -91,7 +82,7 @@ var ViewModel = function(){
 		self.getWikiData();
 		if(self.infowindow.marker != marker){
 			self.infowindow.marker = marker;
-			self.infowindow.setContent('<h2>'+marker.title+'</h2>'+'<p>'+marker.wikiData+'</p>');
+			self.infowindow.setContent('<h2>'+marker.title+'</h2>'+'<p>'+marker.wikiData+' source Wikipedia</p>');
 			self.infowindow.open(map,marker);
 			self.infowindow.addListener('closeclick',function(){
             self.infowindow.marker = null;
@@ -105,7 +96,6 @@ var ViewModel = function(){
 		var queryLower = self.query().toLowerCase();
 		var locationList = $('.list-item').first();
 		var numLocationList =$('.list-item').toArray().length;
-		console.log(self.infowindow);
 		for(var i=0; i<numLocationList; i++){
 			if(locationList.hasClass('item-hidden')){
 				locationList.removeClass('item-hidden');
