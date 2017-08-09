@@ -14,8 +14,10 @@ var initMap = function(){
 	});
 };
 
+var activeMarker;
+
 var ViewModel = function(){
-	var activeMarker;
+
 	var self = this;
 	self.query = ko.observable('');
 
@@ -30,7 +32,6 @@ var ViewModel = function(){
 		});
 
 		marker.addListener('click',function(){
-			self.populateInfoWindow(marker);
 			self.resetMarker(marker);
 		}); 
 		
@@ -73,6 +74,7 @@ var ViewModel = function(){
 		}
 		marker.setAnimation(google.maps.Animation.BOUNCE);
 		marker.setIcon('https://mts.googleapis.com/vt/icon/name=icons/spotlight/spotlight-waypoint-blue.png&psize=16&font=fonts/Roboto-Regular.ttf&color=ff333333&ax=44&ay=48&scale=1');
+		self.populateInfoWindow(marker);
 		activeMarker = marker;
 	};
 

@@ -14,7 +14,7 @@
 		<input type="text" placeholder="search here" class="search-box" data-bind="textInput: query, event: {keyup: search}">
 	</div>
 	<ul id="location-list" data-bind="foreach: markers">
-		<li class="list-item" data-bind="text: title, click: $parent.populateInfoWindow"></li>
+		<li class="list-item" data-bind="text: title, click: $parent.resetMarker"></li>
 	</ul>
 	<script type="text/javascript" src="js/knockout.js"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC7EkntE_zehiMWEKBvl81CqqHMErQ0WpM"></script>
