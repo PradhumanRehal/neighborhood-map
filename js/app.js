@@ -50,6 +50,12 @@ var ViewModel = function(){
 	self.getWikiData = function(){
 		var wikiQuery;
 
+		var wikiRequestTimeout = setTimeout(function(){
+			for(var i=0; i<self.markers().length;i++){
+				self.markers()[i].wikiData = 'Unfortunately an error has encountered';
+			}
+		},1000);
+
 		for(var i=0; i<self.markers().length; i++){
 			wikiQuery = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + self.markers()[i].title + '&srproperties=snippet&format=json&callback=wikiCallback';
 			
@@ -62,8 +68,10 @@ var ViewModel = function(){
 							self.markers()[i].wikiData=data[2][0];
 						}
 					}
+
+					clearTimeout(wikiRequestTimeout);
 				}
-			});			
+			});	
 		}
 	};
 
