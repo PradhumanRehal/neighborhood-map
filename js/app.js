@@ -101,9 +101,25 @@ var ViewModel = function(){
 		}
 	};
 
-	self.searchBox = function(){
-		var query = self.query().toLowerCase();
-		console.log(query);
+	self.search = function(){
+		var queryLower = self.query().toLowerCase();
+		console.log(queryLower);
+		var locationList = $('.list-item').first();
+		var numLocationList =$('.list-item').toArray().length;
+		console.log(locationList);
+		for(var i=0; i<numLocationList; i++){
+			if(locationList.hasClass('item-hidden')){
+				locationList.removeClass('item-hidden');
+					self.markers()[i].setVisible(true);
+
+			}
+
+			if(locationList.text().toLowerCase().search(queryLower)<0 && self.markers().title!=locationList.text()){
+				locationList.addClass('item-hidden');
+				self.markers()[i].setVisible(false);
+			}
+			locationList = locationList.next();
+		}
 	};
 };
 

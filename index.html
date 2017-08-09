@@ -11,7 +11,7 @@
 <body>
 	<div id="map"></div>
 	<div>
-		<input type="text" placeholder="search here" class="search-box" data-bind="textInput: query, event: {keyup: searchBox}">
+		<input type="text" placeholder="search here" class="search-box" data-bind="textInput: query, event: {keyup: search}">
 	</div>
 	<ul id="location-list" data-bind="foreach: markers">
 		<li class="list-item" data-bind="text: title, click: $parent.populateInfoWindow"></li>
