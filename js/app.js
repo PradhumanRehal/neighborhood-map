@@ -11,7 +11,8 @@ var MapList = function(data){
 	this.title = ko.observable(data.title);
 	this.location = ko.observable(data.location);
 	this.marker = ko.observable(data.marker);
-	this.wikiData = ko.observable(data.wikiData);	
+	this.wikiData = ko.observable(data.wikiData);
+	this.infoWindow = ko.observable(data.infoWindow);	
 };
 
 var initMap = function(){
@@ -21,9 +22,11 @@ var initMap = function(){
 	});
 };
 
+var activeMarker;
+
 var ViewModel = function(){
 	var self = this;
-	self.query =ko.observable('');
+	self.query = ko.observable('');
 
 	self.map = initMap();
 
@@ -32,14 +35,16 @@ var ViewModel = function(){
 			map: self.map,
 			position: location.location,
 			title: location.title,
-			animation: google.maps.Animation.DROP
+			animation: google.maps.Animation.DROP,
 		});
 
-		//marker.animation =  google.maps.Animation.BOUNCE;
-		marker.addListener('mouseover',function(){
-			self.clickListener(marker);
+		marker.addListener('click',function(){
+			self.populateInfoWindow(marker);
+			self.resetMarker(marker);
 		}); 
+		
 		return marker;
+
 	};
 
 	self.markers = ko.observableArray([]);
@@ -49,14 +54,6 @@ var ViewModel = function(){
 	});
 
 	self.infowindow = new google.maps.InfoWindow();
-
-
-
-	self.clickListener = function(marker){
-		google.maps.event.addListener(marker,'click',function(){
-          	self.populateInfoWindow(this);	
-		});
-	};
 
 	self.getWikiData = function(){
 		var wikiQuery;
@@ -78,6 +75,18 @@ var ViewModel = function(){
 		}
 	};
 
+	self.resetMarker=function(marker){
+		if(activeMarker){
+		activeMarker.setAnimation(false);
+		activeMarker.setIcon('http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png');	
+		}
+		marker.setAnimation(google.maps.Animation.BOUNCE);
+		marker.setIcon('https://mts.googleapis.com/vt/icon/name=icons/spotlight/spotlight-waypoint-blue.png&psize=16&font=fonts/Roboto-Regular.ttf&color=ff333333&ax=44&ay=48&scale=1');
+		activeMarker = marker;
+	};
+
+
+
 	self.populateInfoWindow = function(marker) { 
 		self.getWikiData();
 		if(self.infowindow.marker != marker){
@@ -89,34 +98,24 @@ var ViewModel = function(){
             marker.setAnimation(false);
           });
 		}
-		for(var i=0; i<self.markers().length; i++){
-			if(self.markers()[i] == marker){
-				self.markers()[i].setAnimation(google.maps.Animation.BOUNCE);
-				self.markers()[i].setIcon('https://mts.googleapis.com/vt/icon/name=icons/spotlight/spotlight-waypoint-blue.png&psize=16&font=fonts/Roboto-Regular.ttf&color=ff333333&ax=44&ay=48&scale=1');
-			}
-			else{
-				self.markers()[i].setAnimation(false);
-				self.markers()[i].setIcon('http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png');
-			}
-		}
 	};
+
 
 	self.search = function(){
 		var queryLower = self.query().toLowerCase();
-		console.log(queryLower);
 		var locationList = $('.list-item').first();
 		var numLocationList =$('.list-item').toArray().length;
-		console.log(locationList);
+		console.log(self.infowindow);
 		for(var i=0; i<numLocationList; i++){
 			if(locationList.hasClass('item-hidden')){
 				locationList.removeClass('item-hidden');
 					self.markers()[i].setVisible(true);
-
 			}
 
 			if(locationList.text().toLowerCase().search(queryLower)<0 && self.markers().title!=locationList.text()){
 				locationList.addClass('item-hidden');
 				self.markers()[i].setVisible(false);
+				self.infowindow.close();
 			}
 			locationList = locationList.next();
 		}
