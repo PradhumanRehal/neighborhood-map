@@ -15,7 +15,7 @@ var initMap = function(){
 };
 
 var ViewModel = function(){
-	var activeMarker;
+	var activeMarker=null;
 	var self = this;
 	self.query = ko.observable('');
 
