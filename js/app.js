@@ -23,6 +23,7 @@ var initMap = function(){
 
 var ViewModel = function(){
 	var self = this;
+	self.query =ko.observable('');
 
 	self.map = initMap();
 
@@ -31,11 +32,11 @@ var ViewModel = function(){
 			map: self.map,
 			position: location.location,
 			title: location.title,
-			//animation: google.maps.Animation.DROP
+			animation: google.maps.Animation.DROP
 		});
 
 		//marker.animation =  google.maps.Animation.BOUNCE;
-		marker.addListener('click',function(){
+		marker.addListener('mouseover',function(){
 			self.clickListener(marker);
 		}); 
 		return marker;
@@ -98,6 +99,11 @@ var ViewModel = function(){
 				self.markers()[i].setIcon('http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png');
 			}
 		}
+	};
+
+	self.searchBox = function(){
+		var query = self.query().toLowerCase();
+		console.log(query);
 	};
 };
 

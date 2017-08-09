@@ -12,11 +12,23 @@ body {
 	position: relative;
 }
 
+.search-box{
+	margin: 0;
+	z-index: 1;
+	top: 0px;
+	position: absolute;
+	right: 10px;
+	height:30px;
+	border: 2px solid #6497b1;
+	border-radius: 4px;
+	width:21.9%;
+}
+
 #location-list {
 	list-style: none;
 	margin: 0;
 	z-index: 1;
-	top: 10px;
+	top: 40px;
 	position: absolute;
 	right: 10px;
 	border: 2px solid #6497b1;
@@ -24,7 +36,7 @@ body {
 	font: 18px sans-serif;
 	color: 	#011f4b;
 	padding:0;
-	max-width: 30%;
+	width: 30%;
 }
 
 .list-item {
@@ -32,5 +44,5 @@ body {
 	padding:4px;
 	margin:2px;
 	border-radius: 4px;
-	height: 30px;
+	height: 15%;
 }
