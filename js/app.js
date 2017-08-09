@@ -82,7 +82,7 @@ var ViewModel = function(){
 		self.getWikiData();
 		if(self.infowindow.marker != marker){
 			self.infowindow.marker = marker;
-			self.infowindow.setContent(marker.title+"wikidata here"+marker.wikiData);
+			self.infowindow.setContent('<h2>'+marker.title+'</h2>'+'<p>'+marker.wikiData+'</p>');
 			self.infowindow.open(map,marker);
 			self.infowindow.addListener('closeclick',function(){
             self.infowindow.marker = null;
