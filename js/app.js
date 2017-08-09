@@ -75,6 +75,7 @@ var ViewModel = function(){
 			$.ajax({
 				url: wikiQuery,
 				dataType:'jsonp',
+				/*jshint loopfunc:true */
 				success: function(data) {
 					for(var i=0; i<self.markers().length; i++){
 						if(data[1][0] == self.markers()[i].title){
