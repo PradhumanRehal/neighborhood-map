@@ -104,6 +104,7 @@ var ViewModel = function(){
 		marker.setIcon('https://mts.googleapis.com/vt/icon/name=icons/spotlight/spotlight-waypoint-blue.png&psize=16&font=fonts/Roboto-Regular.ttf&color=ff333333&ax=44&ay=48&scale=1');
 		// get infowindow for selected marker
 		self.populateInfoWindow(marker);
+		self.infowindow.open(map,marker);
 
 		//set active marker
 		activeMarker = marker;
@@ -115,7 +116,6 @@ var ViewModel = function(){
 		if(self.infowindow.marker != marker){
 			self.infowindow.marker = marker;
 			self.infowindow.setContent('<h2>'+marker.title+'</h2>'+'<p>'+marker.wikiData+' source Wikipedia</p>');
-			self.infowindow.open(map,marker);
 			self.infowindow.addListener('closeclick',function(){
             self.infowindow.marker = null;
             marker.setAnimation(false);
@@ -138,7 +138,7 @@ var ViewModel = function(){
 			if(locationList.text().toLowerCase().search(queryLower)<0 && self.markers().title!=locationList.text()){
 				locationList.addClass('item-hidden');
 				self.markers()[i].setVisible(false);
-				self.infowindow.close();
+				self.infowindow.close(map);
 			}
 
 			// next list item
