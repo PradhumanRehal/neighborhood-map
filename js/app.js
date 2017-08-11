@@ -1,3 +1,4 @@
+var googleSuccess = function(){
 
 // Map location data
 var locations = [
@@ -44,7 +45,6 @@ var ViewModel = function(){
 		}); 
 		
 		return marker;
-
 	};
 
 	self.markers = ko.observableArray();
@@ -108,11 +108,9 @@ var ViewModel = function(){
 
 	// creating infowindow
 	self.populateInfoWindow = function(marker) {
-		if(marker.wikiData == undefined){
-			self.infowindow.setContent('loading');
-		}
+		var content='loading';
 		if(marker.wikiData != undefined){
-			var content = '<h2>'+marker.title+'</h2>'+'<p>'+marker.wikiData+'</p>';
+			content = '<h2>'+marker.title+'</h2>'+'<p>'+marker.wikiData+'</p>';
 		}
 		if(self.infowindow.marker != marker){
 			self.infowindow.marker = marker;
@@ -140,3 +138,5 @@ var ViewModel = function(){
 };
 
 ko.applyBindings(new ViewModel());
+};
+
