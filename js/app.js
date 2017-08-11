@@ -1,12 +1,12 @@
 
 // Map location data
 var locations = [
-	{title: 'Delhi Gate (Red Fort)', location: {lat: 28.656159,lng: 77.24102}, marker: '', selected:false, infoWindow: '', wikiData:''},
-	{title: 'Lotus Temple', location: {lat: 28.553492,lng: 77.258826}, marker: '', selected:false, infoWindow: '', wikiData:''},
-	{title: 'India Gate', location: {lat: 28.61094,lng: 77.234482}, marker: '', selected:false, infoWindow: '', wikiData:''},	
-	{title: 'National Zoological Park Delhi', location: {lat: 28.603018,lng: 77.246548}, marker: '', selected:false, infoWindow: '', wikiData:''},
-	{title: 'Qutb Minar', location: {lat: 28.524428,lng: 77.185456}, marker: '', selected:false, infoWindow: '', wikiData:''},
-	{title: 'National Rail Museum, New Delhi', location: {lat: 28.585499,lng: 77.180089}, marker: '', selected:false, infoWindow: '', wikiData:''}
+	{title: 'Delhi Gate (Red Fort)', location: {lat: 28.656159,lng: 77.24102}, marker: '', selected:false, infoWindow: '', wikiData:'loading'},
+	{title: 'Lotus Temple', location: {lat: 28.553492,lng: 77.258826}, marker: '', selected:false, infoWindow: '', wikiData:'loading'},
+	{title: 'India Gate', location: {lat: 28.61094,lng: 77.234482}, marker: '', selected:false, infoWindow: '', wikiData:'loading'},	
+	{title: 'National Zoological Park Delhi', location: {lat: 28.603018,lng: 77.246548}, marker: '', selected:false, infoWindow: '', wikiData:'loading'},
+	{title: 'Qutb Minar', location: {lat: 28.524428,lng: 77.185456}, marker: '', selected:false, infoWindow: '', wikiData:'loading'},
+	{title: 'National Rail Museum, New Delhi', location: {lat: 28.585499,lng: 77.180089}, marker: '', selected:false, infoWindow: '', wikiData:'loading'}
 ];
 
 // creating map
@@ -47,7 +47,7 @@ var ViewModel = function(){
 
 	};
 
-	self.markers = ko.observableArray([]);
+	self.markers = ko.observableArray();
 
 	//pushing all the new markers to observable array
 	locations.forEach(function(location){
@@ -61,20 +61,13 @@ var ViewModel = function(){
 	self.getWikiData = function(){
 		var wikiQuery;
 
-		// Error handling 
-		var wikiRequestTimeout = setTimeout(function(){
-			for(var i=0; i<self.markers().length;i++){
-				self.markers()[i].wikiData = 'Unfortunately an error has encountered';
-			}
-		},2000);
-
 		// Requsting info 
 		for(var i=0; i<self.markers().length; i++){
 			wikiQuery = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + self.markers()[i].title + '&srproperties=snippet&format=json&callback=wikiCallback';
-			
 			$.ajax({
 				url: wikiQuery,
 				dataType:'jsonp',
+				async: false,
 				/*jshint loopfunc:true */
 				success: function(data) {
 					for(var i=0; i<self.markers().length; i++){
@@ -82,21 +75,24 @@ var ViewModel = function(){
 							self.markers()[i].wikiData=data[2][0];
 						}
 					}
-
-					// If all goes well clear the timer 
-					clearTimeout(wikiRequestTimeout);
+				},
+				error: function(){
+					for(var i=0; i<self.markers().length;i++){
+						self.markers()[i].wikiData = 'Unfortunately an error has encountered';
+					}
 				}
 			});	
 		}
 	};
+	self.getWikiData();
 
 	// Animation and Icon handling
 	self.resetMarker=function(marker){
 
 		//if activeMarker != marker set animation and icon to default
 		if(activeMarker){
-		activeMarker.setAnimation(false);
-		activeMarker.setIcon('https://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png');	
+			activeMarker.setAnimation(false);
+			activeMarker.setIcon('https://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png');	
 		}
 
 		//if activeMarker == marker set animation and icon
@@ -111,11 +107,16 @@ var ViewModel = function(){
 	};
 
 	// creating infowindow
-	self.populateInfoWindow = function(marker) { 
-		self.getWikiData();
+	self.populateInfoWindow = function(marker) {
+		if(marker.wikiData == undefined){
+			self.infowindow.setContent('loading');
+		}
+		if(marker.wikiData != undefined){
+			var content = '<h2>'+marker.title+'</h2>'+'<p>'+marker.wikiData+'</p>';
+		}
 		if(self.infowindow.marker != marker){
 			self.infowindow.marker = marker;
-			self.infowindow.setContent('<h2>'+marker.title+'</h2>'+'<p>'+marker.wikiData+' source Wikipedia</p>');
+			self.infowindow.setContent(content);
 			self.infowindow.addListener('closeclick',function(){
             self.infowindow.marker = null;
             marker.setAnimation(false);
@@ -124,27 +125,18 @@ var ViewModel = function(){
 	};
 
 	// filter functionality
-	self.search = function(){
-		// convert the input string to lowercase
-		var queryLower = self.query().toLowerCase();
-		var locationList = $('.list-item').first();
-		var numLocationList =$('.list-item').toArray().length;
-		for(var i=0; i<numLocationList; i++){
-			if(locationList.hasClass('item-hidden')){
-				locationList.removeClass('item-hidden');
-					self.markers()[i].setVisible(true);
+	self.search = ko.computed(function() {
+		return ko.utils.arrayFilter(self.markers(),function(marker){
+			if (marker.title.toLowerCase().indexOf(self.query().toLowerCase())>=0) {
+				marker.setVisible(true);
+				return true;
 			}
-
-			if(locationList.text().toLowerCase().search(queryLower)<0 && self.markers().title!=locationList.text()){
-				locationList.addClass('item-hidden');
-				self.markers()[i].setVisible(false);
-				self.infowindow.close(map);
+			else{
+				marker.setVisible(false);
+				self.infowindow.close();
 			}
-
-			// next list item
-			locationList = locationList.next();
-		}
-	};
+		});
+	});
 };
 
 ko.applyBindings(new ViewModel());
